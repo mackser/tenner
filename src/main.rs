@@ -1,5 +1,6 @@
 use env_logger::Env;
 use error::Error;
+pub mod endpoint;
 pub mod error;
 pub mod handler;
 pub mod message;
