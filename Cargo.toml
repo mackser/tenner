@@ -1,0 +1,12 @@
+[package]
+name = "dds"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+env_logger = "0.11.9"
+log = "0.4.29"
+thiserror = "2.0.18"
+tokio = { version = "1.49.0", features = ["full"] }
+tokio-rustls = "0.26.1"
+rustls-pemfile = "2.2.0"
