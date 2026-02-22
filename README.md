@@ -1,3 +1,3 @@
 # DDS
 
-Deep Dark Server
+Simple TCP chat server for simple TLS clients
