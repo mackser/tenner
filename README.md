@@ -1,3 +1,4 @@
-# DDS
+# TENNER
 
-Simple TCP chat server for simple TLS clients
+Tls enabled TCP message router (chat)
+
