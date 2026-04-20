@@ -89,9 +89,10 @@ where
     pub async fn run(self) -> Result<(), Error> {
         let (reader_part, writer_part) = self.split();
 
-        tokio::try_join!(async move { reader_part.reader_loop().await }, async move {
-            writer_part.writer_loop().await
-        })?;
+        tokio::try_join!(
+            async move { reader_part.reader_loop().await },
+            async move { writer_part.writer_loop().await }
+        )?;
 
         Ok(())
     }
@@ -135,17 +136,13 @@ where
                 let body = parts.next().unwrap_or("").trim();
 
                 if target.is_empty() || body.is_empty() {
-                    let _ = self.private.try_send(Message::system(
-                        "usage: /msg <target> <message>".to_string(),
-                    ));
+                    let _ = self.private.try_send(Message::system("usage: /msg <target> <message>".to_string()));
                     return;
                 }
 
                 match self.router.send_private(&self.peer, target, body).await {
                     Ok(()) => {
-                        let _ = self
-                            .private
-                            .try_send(Message::system(format!("private to {} sent", target)));
+                        let _ = self.private.try_send(Message::system(format!("private to {} sent", target)));
                     }
                     Err(e) => {
                         let _ = self.private.try_send(Message::system(format!("{}", e)));
@@ -154,22 +151,16 @@ where
             }
 
             "echo" => {
-                let _ = self
-                    .private
-                    .try_send(Message::system(format!("echo {}", args)));
+                let _ = self.private.try_send(Message::system(format!("echo {}", args)));
             }
 
             "list" => {
                 let list = self.router.list_clients().await;
-                let _ = self
-                    .private
-                    .try_send(Message::system(format!("clients [{}]", list)));
+                let _ = self.private.try_send(Message::system(format!("clients [{}]", list)));
             }
 
             _ => {
-                let _ = self
-                    .private
-                    .try_send(Message::system(format!("unknown command '/{}'", cmd)));
+                let _ = self.private.try_send(Message::system(format!("unknown command '/{}'", cmd)));
             }
         }
 

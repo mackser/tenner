@@ -17,10 +17,7 @@ impl BroadcastEndpoint {
     }
 
     pub fn send_only(router: Arc<Router>) -> Self {
-        Self {
-            receiver: None,
-            router,
-        }
+        Self { receiver: None, router }
     }
 
     pub fn send(&self, msg: Message) -> Result<(), broadcast::error::SendError<Message>> {

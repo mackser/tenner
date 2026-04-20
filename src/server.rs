@@ -56,14 +56,7 @@ impl Server {
         let (read_half, write_half) = split(stream);
         let reader = TokioBufReader::new(read_half);
 
-        let handler = Handler::new(
-            reader,
-            write_half,
-            self.router.clone(),
-            tx_private,
-            rx_private,
-            peer.clone(),
-        );
+        let handler = Handler::new(reader, write_half, self.router.clone(), tx_private, rx_private, peer.clone());
 
         let res = handler.run().await?;
         self.router.unregister_client(&peer).await;
@@ -73,11 +66,7 @@ impl Server {
 
     pub async fn run(self) -> Result<(), Error> {
         let listener = TcpListener::bind(&self.addr).await?;
-        let mode = if self.tls_acceptor.is_some() {
-            "TLS"
-        } else {
-            "Plain"
-        };
+        let mode = if self.tls_acceptor.is_some() { "TLS" } else { "Plain" };
 
         info!("listening ({}) on {}", mode, &self.addr);
 
