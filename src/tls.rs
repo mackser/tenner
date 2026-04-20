@@ -31,16 +31,11 @@ pub(crate) fn load_key(path: &Path) -> Result<PrivateKeyDer<'static>, Error> {
     Err(std::io::Error::new(std::io::ErrorKind::NotFound, "private key not found").into())
 }
 
-pub(crate) fn make_tls_acceptor(
-    cert_path: impl AsRef<Path>,
-    key_path: impl AsRef<Path>,
-) -> Result<TlsAcceptor, Error> {
+pub(crate) fn make_tls_acceptor(cert_path: impl AsRef<Path>, key_path: impl AsRef<Path>) -> Result<TlsAcceptor, Error> {
     let certs = load_certs(cert_path.as_ref())?;
     let key = load_key(key_path.as_ref())?;
 
-    let config = ServerConfig::builder()
-        .with_no_client_auth()
-        .with_single_cert(certs, key)?;
+    let config = ServerConfig::builder().with_no_client_auth().with_single_cert(certs, key)?;
 
     Ok(TlsAcceptor::from(Arc::new(config)))
 }
